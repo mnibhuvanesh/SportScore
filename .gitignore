@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build and production output
+dist/
+build/
+out/
+coverage/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.local
+
+# Keep env example
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data & temp files
+pids/
+*.pid
+*.seed
+*.pid.lock
+.temp/
+tmp/
+temp/
+
+# OS and Editor files
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Docker volume mounts (if mounted locally)
+mongo_data/
+redis_data/
+
+# Archives
+*.zip
+*.tar.gz
