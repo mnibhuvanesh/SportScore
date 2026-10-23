@@ -1,0 +1,35 @@
+{
+  "name": "sports-management-platform",
+  "version": "1.0.0",
+  "description": "Centralized Sports Management & Performance Analytics Platform",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build:server": "npm --prefix server run build",
+    "build:client": "npm --prefix client run build",
+    "build": "npm run build:server && npm run build:client",
+    "test:server": "npm --prefix server run test",
+    "test:client": "npm --prefix client run test",
+    "test": "npm run test:server && npm run test:client",
+    "lint": "npm --prefix server run lint && npm --prefix client run lint",
+    "seed": "npm --prefix server run seed",
+    "setup:admin": "npm --prefix server run setup:admin"
+  },
+  "keywords": [
+    "sports-management",
+    "tournament-analytics",
+    "live-scoring",
+    "athletics",
+    "react",
+    "express",
+    "mongodb",
+    "redis"
+  ],
+  "author": "Antigravity Engineering",
+  "license": "MIT"
+}
