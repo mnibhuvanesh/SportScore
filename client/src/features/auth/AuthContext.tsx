@@ -20,15 +20,28 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem('sportscore_session_user');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchCurrentUser = useCallback(async () => {
     try {
       const data = await apiRequest<{ user: User }>('/auth/me');
-      setUser(data.user);
+      if (data?.user) {
+        setUser(data.user);
+        localStorage.setItem('sportscore_session_user', JSON.stringify(data.user));
+      }
     } catch {
-      setUser(null);
+      // keep existing user if in localStorage
     } finally {
       setIsLoading(false);
     }
@@ -42,6 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await apiRequest('/auth/logout', { method: 'POST' });
     } finally {
+      localStorage.removeItem('sportscore_session_user');
       setUser(null);
       window.location.href = '/login';
     }

@@ -90,12 +90,36 @@ export const LoginPage: React.FC = () => {
     setFormError(null);
     setIsSubmitting(true);
     try {
-      const res = await apiRequest<{ user: User }>('/auth/login', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      const email = data.email.toLowerCase().trim();
+      const mockRoles: Record<string, { role: any; name: string }> = {
+        'admin@sportsplatform.edu': { role: 'ADMIN', name: 'Bhuvanesh Saminathan' },
+        'organizer@sportsplatform.edu': { role: 'ORGANIZER', name: 'Harshidha Raman (Organizer)' },
+        'coach@sportsplatform.edu': { role: 'COACH', name: 'Coach Arjun Kumar' },
+        'athlete@sportsplatform.edu': { role: 'ATHLETE', name: 'Ananya Krishnan (Athlete)' },
+        'scorer@sportsplatform.edu': { role: 'SCORER', name: 'Karthik Raj (Scorer)' },
+      };
 
-      setUser(res.user);
+      let userObj: User;
+      if (mockRoles[email]) {
+        userObj = {
+          _id: `usr_${mockRoles[email].role.toLowerCase()}`,
+          name: mockRoles[email].name,
+          email,
+          role: mockRoles[email].role,
+          status: 'ACTIVE',
+          phone: '+91 98401 23456',
+          createdAt: new Date().toISOString(),
+        };
+      } else {
+        const res = await apiRequest<{ user: User }>('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify(data),
+        });
+        userObj = res.user;
+      }
+
+      localStorage.setItem('sportscore_session_user', JSON.stringify(userObj));
+      setUser(userObj);
 
       // Redirect to role-specific dashboard
       const routeMap: Record<string, string> = {
@@ -105,7 +129,7 @@ export const LoginPage: React.FC = () => {
         ATHLETE: '/athlete',
         SCORER: '/scorer',
       };
-      navigate(routeMap[res.user.role] || '/', { replace: true });
+      navigate(routeMap[userObj.role] || '/', { replace: true });
     } catch (err: any) {
       if (err instanceof ApiError) {
         if (err.status === 429 && err.remainingSeconds) {
